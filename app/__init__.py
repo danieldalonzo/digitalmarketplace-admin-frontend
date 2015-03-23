@@ -1,6 +1,7 @@
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from config import config
+from datetime import timedelta
 from .main import main as main_blueprint
 from .main.helpers.auth import requires_auth
 
@@ -19,6 +20,8 @@ def create_app(config_name):
     main_blueprint.config = application.config.copy()
 
     if application.config['AUTHENTICATION']:
+        application.secret_key = 'secret'
+        application.permanent_session_lifetime = timedelta(minutes=60)
         application.before_request(requires_auth)
 
     return application
